@@ -397,10 +397,14 @@ async function run() {
     async function readInspectionState() {
       return evaluate(`(() => {
         const content = document.querySelector('[data-inspection-content]');
+        const preview = document.querySelector('[data-inspection-preview]');
         return {
           clientHeight: content?.clientHeight ?? null,
           scrollHeight: content?.scrollHeight ?? null,
           clipped: content ? content.scrollHeight > content.clientHeight : true,
+          markerCount: preview?.querySelectorAll('[data-inspection-marker]').length ?? 0,
+          previewFound: Boolean(preview),
+          previewText: preview?.textContent?.trim() ?? '',
         };
       })()`);
     }
@@ -1063,7 +1067,11 @@ async function run() {
       ),
       russianHighRiskLayout: Boolean(russianHighRiskLayout && !russianHighRiskLayout.overlaps),
       russianPolicyStatement: statementLayoutPasses(russianPolicyStatementLayout),
-      russianInspection: Boolean(russianInspectionState && !russianInspectionState.clipped),
+      russianInspection:
+        russianInspectionState?.previewFound === true &&
+        russianInspectionState.markerCount === 3 &&
+        russianInspectionState.previewText.includes('НОЧНОЙ РЫНОК') &&
+        !russianInspectionState.clipped,
       russianImageCaptions:
         russianCaptionAudit?.count === 12 && russianCaptionAudit.failed.length === 0,
       russianGameLayer:
@@ -1142,7 +1150,11 @@ async function run() {
         escalationLayout.clearance >= 0,
       highRiskBand: highRiskBand === 'high-risk',
       highRiskLayout: !highRiskLayout.overlaps,
-      englishInspection: !englishInspectionState.clipped,
+      englishInspection:
+        englishInspectionState.previewFound === true &&
+        englishInspectionState.markerCount === 3 &&
+        englishInspectionState.previewText.includes('NIGHT MARKET') &&
+        !englishInspectionState.clipped,
       menuOpened,
       menuClosed,
       auditChunkDeferred,

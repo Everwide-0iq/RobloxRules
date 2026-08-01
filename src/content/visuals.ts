@@ -3,6 +3,16 @@ import type { EscalationStep, PolicyGroup } from '../types/content';
 export const heroInspectionContent = {
   fileLabel: 'ASSET / POSTER_07.WEBP',
   statusLabel: 'PRE-PUBLISH INSPECTION',
+  previewLabel: 'ASSET PREVIEW',
+  scanLabel: 'LIVE SCAN · 02/03',
+  posterEyebrow: 'PLAYER EVENT',
+  posterTitle: 'NIGHT MARKET',
+  posterDetail: 'Original scene · final copy under review',
+  markers: [
+    { id: 'text', label: 'Text' },
+    { id: 'symbol', label: 'Symbol' },
+    { id: 'context', label: 'Context' },
+  ],
   layers: [
     { id: 'source', label: 'Source', value: 'Recorded' },
     { id: 'content', label: 'Content', value: 'Reviewing' },

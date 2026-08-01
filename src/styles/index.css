@@ -336,6 +336,32 @@ html[data-theme='game'] progress::-moz-progress-bar {
   }
 }
 
+.inspection-scan-line {
+  z-index: 1;
+  background: linear-gradient(90deg, transparent, var(--color-risk-green), transparent);
+  box-shadow: 0 0 18px 2px color-mix(in srgb, var(--color-risk-green) 48%, transparent);
+  animation: inspection-scan 4.8s var(--ease-inspection) infinite;
+}
+
+@keyframes inspection-scan {
+  0%,
+  12% {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.9;
+  }
+  72% {
+    opacity: 0.72;
+  }
+  84%,
+  100% {
+    transform: translateY(12.5rem);
+    opacity: 0;
+  }
+}
+
 .cozy-guide main > section {
   padding-block: clamp(5rem, 8vw, 8rem) !important;
 }

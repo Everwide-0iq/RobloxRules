@@ -707,6 +707,16 @@ export const ruCore = {
       ...enContent.visuals.heroInspection,
       fileLabel: 'АССЕТ / POSTER_07.WEBP',
       statusLabel: 'ПРЕДПУБЛИКАЦИОННАЯ ПРОВЕРКА',
+      previewLabel: 'ПРЕВЬЮ АССЕТА',
+      scanLabel: 'СКАНИРОВАНИЕ · 02/03',
+      posterEyebrow: 'ИГРОВОЕ СОБЫТИЕ',
+      posterTitle: 'НОЧНОЙ РЫНОК',
+      posterDetail: 'Оригинальная сцена · текст проверяется',
+      markers: mergeById(enContent.visuals.heroInspection.markers, {
+        text: { label: 'Текст' },
+        symbol: { label: 'Символ' },
+        context: { label: 'Контекст' },
+      }),
       layers: mergeById(enContent.visuals.heroInspection.layers, {
         source: { label: 'Источник', value: 'Зафиксирован' },
         content: { label: 'Контент', value: 'Проверяется' },
