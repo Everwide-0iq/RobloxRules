@@ -13,6 +13,7 @@ coverage/
 
 # Tooling caches
 .vite/
+.vercel/
 *.tsbuildinfo
 
 # Logs
