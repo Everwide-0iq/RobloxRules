@@ -1,4 +1,15 @@
 export const pageInterface = {
+  themeSwitcher: {
+    label: 'Choose appearance',
+    menuLabel: 'Theme options',
+    currentLabel: 'Current theme',
+    lightLabel: 'Light',
+    darkLabel: 'Dark',
+    gameLabel: 'Game',
+    changedToLight: 'Light theme enabled.',
+    changedToDark: 'Dark theme enabled.',
+    changedToGame: 'Game theme enabled.',
+  },
   heroLead: 'One careless asset can put an entire project at risk.',
   journeyEyebrow: 'Your release journey',
   journeyTitle: 'Four calm checkpoints before Publish.',

@@ -297,6 +297,63 @@ async function run() {
       return clicked;
     }
 
+    async function readThemeState() {
+      return evaluate(`(() => {
+        const root = document.documentElement;
+        const trigger = document.querySelector('[data-theme-trigger]');
+        const triggerRect = trigger?.getBoundingClientRect();
+        const triggerStyle = trigger ? getComputedStyle(trigger) : null;
+        let storedTheme = null;
+
+        try {
+          storedTheme = localStorage.getItem('before-you-publish-theme');
+        } catch {
+          storedTheme = 'unavailable';
+        }
+
+        return {
+          colorScheme: getComputedStyle(root).colorScheme,
+          gameAnimation: getComputedStyle(document.querySelector('.cozy-guide'), '::before')
+            .animationName,
+          metaColorScheme: document.querySelector('meta[name="color-scheme"]')?.content ?? null,
+          metaThemeColor: document.querySelector('meta[name="theme-color"]')?.content ?? null,
+          storedTheme,
+          theme: root.dataset.theme ?? null,
+          triggerExpanded: trigger?.getAttribute('aria-expanded') ?? null,
+          triggerVisible: Boolean(
+            triggerRect &&
+              triggerStyle &&
+              triggerRect.width > 0 &&
+              triggerRect.height > 0 &&
+              triggerRect.left >= 0 &&
+              triggerRect.right <= window.innerWidth &&
+              triggerStyle.visibility !== 'hidden'
+          ),
+        };
+      })()`);
+    }
+
+    async function selectTheme(theme) {
+      const opened = await evaluate(`(() => {
+        const trigger = document.querySelector('[data-theme-trigger]');
+        if (!trigger) return false;
+        trigger.click();
+        return true;
+      })()`);
+      if (!opened) return false;
+      await delay(80);
+      const clicked = await evaluate(`(() => {
+        const option = document.querySelector(
+          '[data-theme-option=${JSON.stringify(theme)}]',
+        );
+        if (!option) return false;
+        option.click();
+        return true;
+      })()`);
+      await delay(250);
+      return clicked;
+    }
+
     async function readViewportState(width) {
       return evaluate(`(() => {
         const root = document.documentElement;
@@ -308,6 +365,8 @@ async function run() {
           rootScrollWidth: root.scrollWidth,
           bodyScrollWidth,
           clientWidth: root.clientWidth,
+          scrollX: window.scrollX,
+          visualOffsetLeft: window.visualViewport?.offsetLeft ?? 0,
           overflow: scrollWidth > root.clientWidth,
           h1Count: document.querySelectorAll('h1').length,
           lang: root.lang,
@@ -651,6 +710,38 @@ async function run() {
 
     await setViewport(1440, 900, false);
     await navigate();
+    const lightThemeDefault = await readThemeState();
+    const darkThemeClicked = await selectTheme('dark');
+    const darkTheme = await readThemeState();
+    const darkThemeScreenshot = await screenshot('desktop-theme-dark.png');
+    await client.send('Page.reload', { ignoreCache: true });
+    await delay(700);
+    const darkThemePersisted = await readThemeState();
+    const gameThemeClicked = await selectTheme('game');
+    const gameTheme = await readThemeState();
+    const gameThemeScreenshot = await screenshot('desktop-theme-game.png');
+    await setViewport(390, 844, true);
+    await navigate(`${BASE_URL}?qa-theme=game`);
+    const gameThemeMobile = await readThemeState();
+    const gameThemeMobileViewport = await readViewportState(390);
+    await evaluate("document.querySelector('[data-theme-trigger]')?.click()");
+    await delay(150);
+    const gameThemeMobileMenuViewport = await readViewportState(390);
+    const gameThemeMobileMenu = await screenshot('mobile-theme-game-menu.png');
+    await client.send('Input.dispatchKeyEvent', {
+      type: 'keyDown',
+      key: 'Escape',
+      code: 'Escape',
+    });
+    await client.send('Input.dispatchKeyEvent', {
+      type: 'keyUp',
+      key: 'Escape',
+      code: 'Escape',
+    });
+    await delay(100);
+    await setViewport(1440, 900, false);
+    const lightThemeClicked = await selectTheme('light');
+    const lightThemeRestored = await readThemeState();
     const englishDefault = await readLanguageState();
     const russianSwitchClicked = await selectLanguage('ru');
     const russianAfterSwitch = await readLanguageState();
@@ -674,7 +765,7 @@ async function run() {
     let russianHighRiskLayout;
     let russianCaptionAudit;
     let russianGameLayer;
-    for (const width of [360, 390, 768, 1440]) {
+    for (const width of [320, 360, 390, 768, 1440]) {
       await setViewport(width, width < 768 ? 844 : 900, width < 768);
       await navigate(`${BASE_URL}?qa-locale=ru&viewport=${String(width)}`);
       russianViewportResults.push({
@@ -731,7 +822,7 @@ async function run() {
     const englishRestored = await readLanguageState();
 
     const viewportResults = [];
-    for (const width of [360, 390, 768, 1024, 1440, 1920]) {
+    for (const width of [320, 360, 390, 768, 1024, 1440, 1920]) {
       await setViewport(width, width < 768 ? 844 : 900, width < 768);
       await navigate();
       viewportResults.push(await readViewportState(width));
@@ -892,6 +983,35 @@ async function run() {
       state.textTooNarrow === false;
 
     const passCriteria = {
+      themeSwitcher:
+        lightThemeDefault.theme === 'light' &&
+        lightThemeDefault.storedTheme === null &&
+        lightThemeDefault.colorScheme === 'light' &&
+        lightThemeDefault.metaColorScheme === 'light' &&
+        lightThemeDefault.metaThemeColor === '#f7f0e3' &&
+        lightThemeDefault.triggerVisible &&
+        darkThemeClicked &&
+        darkTheme.theme === 'dark' &&
+        darkTheme.storedTheme === 'dark' &&
+        darkTheme.colorScheme === 'dark' &&
+        darkTheme.metaColorScheme === 'dark' &&
+        darkTheme.metaThemeColor === '#101713' &&
+        darkThemePersisted.theme === 'dark' &&
+        darkThemePersisted.storedTheme === 'dark' &&
+        gameThemeClicked &&
+        gameTheme.theme === 'game' &&
+        gameTheme.storedTheme === 'game' &&
+        gameTheme.colorScheme === 'dark' &&
+        gameTheme.metaThemeColor === '#070914' &&
+        gameTheme.gameAnimation === 'game-grid-drift' &&
+        gameThemeMobile.theme === 'game' &&
+        gameThemeMobile.triggerVisible &&
+        !gameThemeMobileViewport.overflow &&
+        gameThemeMobileMenuViewport.scrollX === 0 &&
+        gameThemeMobileMenuViewport.visualOffsetLeft === 0 &&
+        lightThemeClicked &&
+        lightThemeRestored.theme === 'light' &&
+        lightThemeRestored.storedTheme === 'light',
       languageSwitcherVisible:
         englishDefault.switcherVisible &&
         russianAfterSwitch.switcherVisible &&
@@ -933,6 +1053,8 @@ async function run() {
       russianViewports: russianViewportResults.every(
         (result) =>
           !result.overflow &&
+          result.scrollX === 0 &&
+          result.visualOffsetLeft === 0 &&
           result.lang === 'ru' &&
           result.h1Count === 1 &&
           result.language.activeLocale === 'ru' &&
@@ -961,7 +1083,12 @@ async function run() {
         englishRestored.structuredLanguage === 'en' &&
         englishRestored.title === englishDefault.title,
       englishViewports: viewportResults.every(
-        (result) => !result.overflow && result.h1Count === 1 && result.lang === 'en',
+        (result) =>
+          !result.overflow &&
+          result.scrollX === 0 &&
+          result.visualOffsetLeft === 0 &&
+          result.h1Count === 1 &&
+          result.lang === 'en',
       ),
       scenarioExpanded: scenarioExpanded === 'true',
       imageSlots:
@@ -1045,6 +1172,19 @@ async function run() {
         englishSwitchClicked,
         englishRestored,
       },
+      themes: {
+        lightThemeDefault,
+        darkThemeClicked,
+        darkTheme,
+        darkThemePersisted,
+        gameThemeClicked,
+        gameTheme,
+        gameThemeMobile,
+        gameThemeMobileViewport,
+        gameThemeMobileMenuViewport,
+        lightThemeClicked,
+        lightThemeRestored,
+      },
       viewportResults,
       interactions: {
         scenarioExpanded,
@@ -1073,6 +1213,9 @@ async function run() {
       failedRequests,
       linkAudit,
       screenshots: {
+        darkTheme: darkThemeScreenshot,
+        gameTheme: gameThemeScreenshot,
+        gameThemeMobileMenu,
         russianDesktopHero,
         russianBlindSpots,
         russianPolicyStatement,

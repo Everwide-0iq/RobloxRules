@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, useScroll, type HTMLMotionProps } from 'motion/react';
 
 import { RiskJourneyContext, useRiskJourneyController } from '../../hooks/useRiskJourney';
+import { useTheme } from '../../theme/ThemeContext';
 import type { RiskBand } from '../../types/content';
 
 const riskBands = new Set<RiskBand>(['lower-risk', 'review', 'high-risk', 'recovery']);
@@ -59,6 +60,7 @@ export function ScrollRiskField({
   ...rest
 }: ScrollRiskFieldProps) {
   const { scrollYProgress } = useScroll();
+  const { theme } = useTheme();
   const activeBand = useSemanticRiskBand();
   const journey = useRiskJourneyController(scrollYProgress, activeBand);
 
@@ -70,8 +72,8 @@ export function ScrollRiskField({
         data-risk-band={journey.activeBand}
         style={{
           ...style,
-          backgroundColor: journey.backgroundColor,
-          color: journey.foregroundColor,
+          backgroundColor: theme === 'light' ? journey.backgroundColor : 'var(--color-paper)',
+          color: theme === 'light' ? journey.foregroundColor : 'var(--color-ink)',
         }}
       >
         {children}

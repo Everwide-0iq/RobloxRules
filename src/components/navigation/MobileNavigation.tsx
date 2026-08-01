@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 
 import type { NavigationItem, SectionId } from '../../types/content';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -180,8 +181,11 @@ export function MobileNavigation({
           className="fixed inset-0 z-[80] flex h-dvh flex-col overflow-y-auto bg-paper px-5 py-5 text-ink"
           tabIndex={-1}
         >
-          <div className="flex items-center justify-between gap-3">
-            <LanguageSwitcher />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <ThemeSwitcher />
+              <LanguageSwitcher />
+            </div>
             <button
               type="button"
               className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-ink/12 bg-white/72 px-4 text-sm font-bold transition-colors hover:bg-white"

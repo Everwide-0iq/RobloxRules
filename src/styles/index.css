@@ -46,6 +46,46 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --focus-ring: #315c48;
+  --theme-surface: #fffaf0;
+  --theme-strong-surface: #1b2c24;
+  --theme-header: rgb(247 240 227 / 92%);
+  --theme-shadow: rgb(27 44 36 / 12%);
+}
+
+html[data-theme='dark'] {
+  --color-risk-green: #91aa91;
+  --color-risk-lime: #afbc82;
+  --color-risk-yellow: #d8c780;
+  --color-risk-amber: #c89472;
+  --color-risk-red: #c87870;
+  --color-risk-crimson: #8f6d86;
+  --color-ink: #edf4ef;
+  --color-paper: #101713;
+  --color-pure-white: #18221d;
+  --focus-ring: #b9d7c2;
+  --theme-surface: #18231e;
+  --theme-strong-surface: #24372e;
+  --theme-header: rgb(16 23 19 / 90%);
+  --theme-shadow: rgb(0 0 0 / 34%);
+  color-scheme: dark;
+}
+
+html[data-theme='game'] {
+  --color-risk-green: #54f6c6;
+  --color-risk-lime: #73ffb5;
+  --color-risk-yellow: #f4ff75;
+  --color-risk-amber: #ff9c5d;
+  --color-risk-red: #ff4f91;
+  --color-risk-crimson: #a76cff;
+  --color-ink: #ebfaff;
+  --color-paper: #070914;
+  --color-pure-white: #0d1427;
+  --focus-ring: #72f7ff;
+  --theme-surface: #0e162b;
+  --theme-strong-surface: #111d39;
+  --theme-header: rgb(7 9 20 / 82%);
+  --theme-shadow: rgb(0 0 0 / 52%);
+  color-scheme: dark;
 }
 
 @layer base {
@@ -71,6 +111,9 @@
     line-height: 1.5;
     letter-spacing: -0.01em;
     accent-color: var(--color-risk-crimson);
+    transition:
+      color 220ms ease,
+      background-color 220ms ease;
   }
 
   img,
@@ -121,6 +164,176 @@
 #root {
   min-height: 100dvh;
   isolation: isolate;
+}
+
+html[data-theme='dark'] .bg-ink,
+html[data-theme='game'] .bg-ink {
+  background-color: var(--theme-strong-surface);
+}
+
+html[data-theme='dark'] [class~='bg-white'],
+html[data-theme='game'] [class~='bg-white'],
+html[data-theme='dark'] [class*='bg-white/'],
+html[data-theme='game'] [class*='bg-white/'] {
+  background-color: color-mix(in srgb, var(--theme-surface) 90%, transparent) !important;
+}
+
+html[data-theme='dark']
+  :is(
+    [class~='bg-white/5'],
+    [class~='bg-white/6'],
+    [class~='bg-white/7'],
+    [class~='bg-white/8'],
+    [class~='bg-white/9'],
+    [class~='bg-white/10'],
+    [class~='bg-white/12']
+  ),
+html[data-theme='game']
+  :is(
+    [class~='bg-white/5'],
+    [class~='bg-white/6'],
+    [class~='bg-white/7'],
+    [class~='bg-white/8'],
+    [class~='bg-white/9'],
+    [class~='bg-white/10'],
+    [class~='bg-white/12']
+  ) {
+  background-color: color-mix(in srgb, var(--theme-surface) 32%, transparent) !important;
+}
+
+html[data-theme='dark'] header.sticky,
+html[data-theme='game'] header.sticky {
+  background: var(--theme-header) !important;
+  box-shadow: 0 8px 32px var(--theme-shadow);
+}
+
+html[data-theme='dark'] #appeals,
+html[data-theme='game'] #appeals {
+  background-color: var(--color-paper) !important;
+}
+
+html[data-theme='dark'] .cozy-guide > [aria-hidden='true'] {
+  opacity: 0.18;
+}
+
+html[data-theme='game'] .cozy-guide > [aria-hidden='true'] {
+  opacity: 0.34;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgb(84 246 198 / 24%), transparent 25%),
+    radial-gradient(circle at 86% 20%, rgb(167 108 255 / 22%), transparent 24%),
+    radial-gradient(circle at 54% 80%, rgb(114 247 255 / 15%), transparent 28%) !important;
+}
+
+html[data-theme='game'] .cozy-guide::before,
+html[data-theme='game'] .cozy-guide::after {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+}
+
+html[data-theme='game'] .cozy-guide::before {
+  z-index: 1;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(rgb(84 246 198 / 30%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(167 108 255 / 24%) 1px, transparent 1px);
+  background-position: center;
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 74%);
+  animation: game-grid-drift 18s linear infinite;
+}
+
+html[data-theme='game'] .cozy-guide::after {
+  z-index: 20;
+  opacity: 0.06;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgb(204 250 255 / 65%) 4px
+  );
+  animation: game-scan 9s linear infinite;
+}
+
+html[data-theme='game'] :is(h1, h2, h3) {
+  text-shadow:
+    0 0 22px rgb(84 246 198 / 13%),
+    0 0 42px rgb(167 108 255 / 9%);
+}
+
+html[data-theme='game']
+  :is(
+    [data-release-quest],
+    [data-release-simulator],
+    [data-image-slot],
+    [data-section-statement],
+    [data-hero-inspection],
+    [data-scenario-id]
+  ) {
+  border-color: rgb(114 247 255 / 24%) !important;
+  box-shadow:
+    0 0 0 1px rgb(167 108 255 / 10%),
+    0 18px 58px rgb(0 0 0 / 36%),
+    0 0 34px rgb(84 246 198 / 7%);
+}
+
+html[data-theme='game'] :is(.theme-trigger, [data-theme-option], a, button):hover {
+  filter: drop-shadow(0 0 9px rgb(84 246 198 / 28%));
+}
+
+html[data-theme='game'] .theme-trigger {
+  border-color: rgb(84 246 198 / 54%);
+  color: #dffff7;
+  box-shadow:
+    0 0 0 1px rgb(167 108 255 / 20%),
+    0 0 22px rgb(84 246 198 / 16%);
+  animation: game-control-pulse 3.2s ease-in-out infinite;
+}
+
+html[data-theme='game'] .theme-menu {
+  border-color: rgb(114 247 255 / 42%);
+  background: var(--theme-surface) !important;
+  box-shadow:
+    0 22px 60px rgb(0 0 0 / 58%),
+    0 0 30px rgb(167 108 255 / 18%);
+}
+
+html[data-theme='dark'] .theme-menu {
+  background: var(--theme-surface) !important;
+}
+
+html[data-theme='game'] progress::-webkit-progress-value {
+  background: linear-gradient(90deg, var(--color-risk-green), #72f7ff, var(--color-risk-crimson));
+  box-shadow: 0 0 14px rgb(84 246 198 / 75%);
+}
+
+html[data-theme='game'] progress::-moz-progress-bar {
+  background: linear-gradient(90deg, var(--color-risk-green), #72f7ff, var(--color-risk-crimson));
+  box-shadow: 0 0 14px rgb(84 246 198 / 75%);
+}
+
+@keyframes game-grid-drift {
+  to {
+    background-position: 64px 64px;
+  }
+}
+
+@keyframes game-scan {
+  0% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes game-control-pulse {
+  50% {
+    box-shadow:
+      0 0 0 1px rgb(167 108 255 / 32%),
+      0 0 30px rgb(84 246 198 / 26%);
+  }
 }
 
 .cozy-guide main > section {

@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f7f0e3" />
     <meta name="color-scheme" content="light" />
+    <script>
+      (() => {
+        const storageKey = 'before-you-publish-theme';
+        const themes = {
+          light: { colorScheme: 'light', themeColor: '#f7f0e3' },
+          dark: { colorScheme: 'dark', themeColor: '#101713' },
+          game: { colorScheme: 'dark', themeColor: '#070914' },
+        };
+        let theme = 'light';
+
+        try {
+          const storedTheme = window.localStorage.getItem(storageKey);
+          if (storedTheme && Object.hasOwn(themes, storedTheme)) theme = storedTheme;
+        } catch {
+          // Light stays the predictable default when storage is unavailable.
+        }
+
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = themes[theme].themeColor;
+        document.querySelector('meta[name="color-scheme"]').content = themes[theme].colorScheme;
+      })();
+    </script>
     <meta name="robots" content="index, follow" />
     <meta
       name="description"

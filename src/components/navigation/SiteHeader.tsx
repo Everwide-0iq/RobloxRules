@@ -5,6 +5,7 @@ import { useRiskJourney } from '../../hooks/useRiskJourney';
 import type { NavigationItem, RiskBand, SectionId } from '../../types/content';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { MobileNavigation } from './MobileNavigation';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 const desktopSectionIds = new Set<SectionId>([
   'start',
@@ -95,7 +96,8 @@ export function SiteHeader({
             </span>
           </div>
 
-          <div className="ml-auto xl:ml-0">
+          <div className="ml-auto flex items-center gap-2 xl:ml-0">
+            <ThemeSwitcher />
             <LanguageSwitcher />
           </div>
 

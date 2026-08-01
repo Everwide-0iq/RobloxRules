@@ -470,6 +470,17 @@ export const ruCore = {
   },
   page: {
     ...enContent.page,
+    themeSwitcher: {
+      label: 'Выбрать оформление',
+      menuLabel: 'Варианты темы',
+      currentLabel: 'Текущая тема',
+      lightLabel: 'Светлая',
+      darkLabel: 'Тёмная',
+      gameLabel: 'Игровая',
+      changedToLight: 'Включена светлая тема.',
+      changedToDark: 'Включена тёмная тема.',
+      changedToGame: 'Включена игровая тема.',
+    },
     heroLead: 'Один неосторожно выбранный ассет может поставить под угрозу весь проект.',
     journeyEyebrow: 'Ваш путь к релизу',
     journeyTitle: 'Четыре спокойные контрольные точки перед публикацией.',
