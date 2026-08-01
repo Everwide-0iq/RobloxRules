@@ -710,7 +710,7 @@ async function run() {
 
     await setViewport(1440, 900, false);
     await navigate();
-    const lightThemeDefault = await readThemeState();
+    const gameThemeDefault = await readThemeState();
     const darkThemeClicked = await selectTheme('dark');
     const darkTheme = await readThemeState();
     const darkThemeScreenshot = await screenshot('desktop-theme-dark.png');
@@ -984,12 +984,13 @@ async function run() {
 
     const passCriteria = {
       themeSwitcher:
-        lightThemeDefault.theme === 'light' &&
-        lightThemeDefault.storedTheme === null &&
-        lightThemeDefault.colorScheme === 'light' &&
-        lightThemeDefault.metaColorScheme === 'light' &&
-        lightThemeDefault.metaThemeColor === '#f7f0e3' &&
-        lightThemeDefault.triggerVisible &&
+        gameThemeDefault.theme === 'game' &&
+        gameThemeDefault.storedTheme === null &&
+        gameThemeDefault.colorScheme === 'dark' &&
+        gameThemeDefault.metaColorScheme === 'dark' &&
+        gameThemeDefault.metaThemeColor === '#070914' &&
+        gameThemeDefault.gameAnimation === 'game-grid-drift' &&
+        gameThemeDefault.triggerVisible &&
         darkThemeClicked &&
         darkTheme.theme === 'dark' &&
         darkTheme.storedTheme === 'dark' &&
@@ -1173,7 +1174,7 @@ async function run() {
         englishRestored,
       },
       themes: {
-        lightThemeDefault,
+        gameThemeDefault,
         darkThemeClicked,
         darkTheme,
         darkThemePersisted,

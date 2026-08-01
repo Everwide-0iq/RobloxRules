@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { ThemeContext, type Theme } from './ThemeContext';
 
 export const THEME_STORAGE_KEY = 'before-you-publish-theme';
-const DEFAULT_THEME: Theme = 'light';
+const DEFAULT_THEME: Theme = 'game';
 
 const themeMeta = {
   light: { colorScheme: 'light', themeColor: '#f7f0e3' },
