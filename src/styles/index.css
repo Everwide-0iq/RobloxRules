@@ -1,0 +1,186 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    ui-rounded, 'Avenir Next Rounded', 'Segoe UI', system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+  --font-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --color-risk-green: #b8c8a9;
+  --color-risk-lime: #d5dda7;
+  --color-risk-yellow: #e7d59a;
+  --color-risk-amber: #e4af87;
+  --color-risk-red: #ce806f;
+  --color-risk-crimson: #6f4e63;
+  --color-ink: #1b2c24;
+  --color-paper: #f7f0e3;
+  --color-pure-white: #ffffff;
+
+  --radius-cozy-sm: 0.625rem;
+  --radius-cozy: 1rem;
+  --radius-cozy-lg: 1.5rem;
+  --shadow-cozy: 0 1rem 2.5rem rgb(27 44 36 / 10%);
+
+  --spacing-gutter: clamp(1rem, 3vw, 2.5rem);
+  --spacing-section-sm: 4.5rem;
+  --spacing-section: 7rem;
+  --spacing-section-lg: 10rem;
+
+  --text-display: clamp(3.5rem, 9vw, 8rem);
+  --text-display--line-height: 0.9;
+  --text-title: clamp(2.5rem, 6vw, 5.5rem);
+  --text-title--line-height: 0.96;
+  --tracking-display: -0.045em;
+  --tracking-label: 0.08em;
+
+  --ease-inspection: cubic-bezier(0.22, 0.8, 0.32, 1);
+}
+
+:root {
+  color: var(--color-ink);
+  background: var(--color-paper);
+  color-scheme: light;
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --focus-ring: #315c48;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 320px;
+    min-height: 100%;
+    background: var(--color-paper);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100dvh;
+    margin: 0;
+    overflow-x: clip;
+    background: var(--color-paper);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    accent-color: var(--color-risk-crimson);
+  }
+
+  img,
+  svg {
+    max-width: 100%;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    border-radius: var(--radius-cozy-sm);
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 4px;
+  }
+
+  ::selection {
+    color: var(--color-paper);
+    background: var(--color-risk-crimson);
+  }
+
+  section[id='high-risk'] :focus-visible,
+  section[id='cases'] :focus-visible,
+  section[id='audit'] :focus-visible,
+  section[id='final'] :focus-visible,
+  section[id='sources'] :focus-visible {
+    outline-color: var(--color-risk-yellow);
+  }
+}
+
+#root {
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+.cozy-guide main > section {
+  padding-block: clamp(5rem, 8vw, 8rem) !important;
+}
+
+.cozy-guide main > section:first-child {
+  padding-top: clamp(3rem, 6vw, 5.5rem) !important;
+}
+
+.cozy-guide main > section > .mx-auto {
+  max-width: 82rem;
+}
+
+progress {
+  appearance: none;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 32%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
+  box-shadow: inset 0 1px 2px rgb(27 44 36 / 12%);
+}
+
+progress::-webkit-progress-bar {
+  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
+}
+
+progress::-webkit-progress-value {
+  border-radius: inherit;
+  background: var(--color-risk-crimson);
+}
+
+progress::-moz-progress-bar {
+  border-radius: inherit;
+  background: var(--color-risk-crimson);
+}
+
+@media (max-height: 48rem) {
+  .story-sticky {
+    position: static !important;
+  }
+}
+
+@media (min-width: 80rem) {
+  main > section {
+    padding-right: 15rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
